@@ -96,6 +96,27 @@ background-color: #3D4917;
 `;   
 
 const NavBar = () => {
+  const connectWallet = async () => {
+    if (window.ethereum) {
+      try {
+        // Request account access from MetaMask
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        // You can now interact with the connected wallet using ethers.js
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        // Example: Get the connected wallet address
+        const address = await signer.getAddress();
+        console.log('Connected wallet address:', address);
+        // Add your custom logic here to interact with the connected wallet
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error);
+      }
+    } else {
+      console.error('MetaMask extension not detected');
+    }
+  };
+
+  
     return (
         <Section>
       <Container>
@@ -103,7 +124,7 @@ const NavBar = () => {
         <Items>About</Items>
         <Items>Model</Items>
         <Items>FAQs</Items>
-        <Button>Connect Wallet</Button>
+        <Button onClick={connectWallet}>Connect Wallet</Button>
       </Container>
     </Section>
     );
